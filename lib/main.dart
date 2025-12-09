@@ -6,12 +6,15 @@ import 'screens/choice_screen.dart';
 import 'screens/signin_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/bmi_screen.dart';
+import 'screens/medicaldetail_screen.dart'; 
 import 'screens/home_page.dart';
 import 'screens/note_page.dart';
 import 'screens/reminder_page.dart';
 import 'screens/records_page.dart';
 import 'screens/settings.dart';
 import 'screens/profile.dart';
+import 'screens/data_security_screen.dart';
+import 'screens/add_reminder_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +22,8 @@ void main() async {
   // Hive for local storage
   await Hive.initFlutter();
   await Hive.openBox('medipalBox');
+  await Hive.openBox('notesBox');
+
   
   runApp(const MyApp());
 }
@@ -49,12 +54,15 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => const SignInScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/bmi': (context) => const BMIScreen(),
+        '/medical': (context) => const MedicalDetailScreen(), 
         '/home': (context) => const HomeScreen(),
         '/notes': (context) => const NotePage(),
         '/reminders': (context) => const ReminderPage(),
         '/records': (context) => const RecordsPage(),
         '/settings': (context) => const SettingsPage(),
         '/profile': (context) => const ProfilePage(),
+        '/dataSecurity': (context) => const DataSecurityScreen(),
+        '/addReminder': (context) => const AddReminderPage(),
       },
     );
   }

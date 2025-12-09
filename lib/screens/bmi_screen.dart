@@ -22,26 +22,26 @@ class _BMIScreenState extends State<BMIScreen> {
   }
 
   void _calculateBMI() {
-    if (_formKey.currentState!.validate()) {
-      final height = double.tryParse(_heightController.text);
-      final weight = double.tryParse(_weightController.text);
+  if (_formKey.currentState!.validate()) {
+    final height = double.tryParse(_heightController.text);
+    final weight = double.tryParse(_weightController.text);
 
-      if (height != null && weight != null && height > 0) {
-        final bmi = weight / ((height / 100) * (height / 100));
-        
-        // Navigate to next screen with BMI data
-        Navigator.pushNamed(
-          context,
-          '/getstarted',
-          arguments: {'bmi': bmi.toStringAsFixed(1)},
-        );
-      }
+    if (height != null && weight != null && height > 0) {
+      final bmi = weight / ((height / 100) * (height / 100));
+      
+      // Navigate to medical details screen instead of getstarted
+      Navigator.pushNamed(
+        context,
+        '/medical',  // CHANGED THIS
+        arguments: {'bmi': bmi.toStringAsFixed(1)},
+      );
     }
   }
+}
 
-  void _skipBMI() {
-    Navigator.pushNamed(context, '/getstarted');
-  }
+void _skipBMI() {
+  Navigator.pushNamed(context, '/medical'); // CHANGED THIS
+}
 
   @override
   Widget build(BuildContext context) {
