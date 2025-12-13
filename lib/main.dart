@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+// Screens
 import 'screens/splash_screen.dart';
 import 'screens/choice_screen.dart';
 import 'screens/signin_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/bmi_screen.dart';
-import 'screens/medicaldetail_screen.dart'; 
+import 'screens/medicaldetail_screen.dart';
 import 'screens/home_page.dart';
 import 'screens/note_page.dart';
 import 'screens/reminder_page.dart';
@@ -18,13 +22,17 @@ import 'screens/add_reminder_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Hive for local storage
-  await Hive.initFlutter();
-  await Hive.openBox('medipalBox');
-  await Hive.openBox('notesBox');
 
-  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Initialize Hive
+  await Hive.initFlutter();
+  await Hive.openBox('medipalBox');  // User data, vitals, etc.
+  await Hive.openBox('notesBox');    // Notes storage
+
   runApp(const MyApp());
 }
 
@@ -38,14 +46,12 @@ class MyApp extends StatelessWidget {
       title: 'MediPal',
       theme: ThemeData(
         brightness: Brightness.light,
-        scaffoldBackgroundColor: Color(0xFFF5F5F5),
+        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Color(0xFFEAFE63),
+          seedColor: const Color(0xFFEAFE63),
           brightness: Brightness.light,
         ),
-        textTheme: GoogleFonts.poppinsTextTheme(
-          ThemeData.light().textTheme,
-        ),
+        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       initialRoute: '/',
       routes: {
@@ -54,7 +60,7 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => const SignInScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/bmi': (context) => const BMIScreen(),
-        '/medical': (context) => const MedicalDetailScreen(), 
+        '/medical': (context) => const MedicalDetailScreen(),
         '/home': (context) => const HomeScreen(),
         '/notes': (context) => const NotePage(),
         '/reminders': (context) => const ReminderPage(),
