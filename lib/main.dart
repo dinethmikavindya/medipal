@@ -65,18 +65,7 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      initialRoute: '/',
-      onGenerateRoute: (settings) {
-        if (settings.name == '/') {
-          final user = FirebaseAuth.instance.currentUser;
-          if (user != null) {
-            return MaterialPageRoute(builder: (_) => const RoleRouter());
-          } else {
-            return MaterialPageRoute(builder: (_) => const ChoiceScreen());
-          }
-        }
-        return null;
-      },
+      home: const AuthGate(),
       routes: {
         '/choice': (context) => const ChoiceScreen(),
         '/signin': (context) => const SignInScreen(),
@@ -93,6 +82,27 @@ class MyApp extends StatelessWidget {
         '/addReminder': (context) => const AddReminderPage(),
         '/linkPatient': (context) => const LinkPatientScreen(),
         '/caregiverHome': (context) => const CaregiverHomeScreen(),
+      },
+    );
+  }
+}
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasData) {
+          return const RoleRouter();
+        }
+        return const ChoiceScreen();
       },
     );
   }

@@ -13,14 +13,23 @@ class RoleRouter extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, authSnapshot) {
         // Not logged in
-        if (!authSnapshot.hasData) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacementNamed(context, '/choice');
-          });
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
+        // ✅ REPLACE WITH THIS
+if (authSnapshot.connectionState == ConnectionState.waiting) {
+  // Still loading — wait for Firebase, don't redirect yet!
+  return const Scaffold(
+    body: Center(child: CircularProgressIndicator()),
+  );
+}
+
+if (!authSnapshot.hasData) {
+  // Now we're sure there's no session — safe to redirect
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Navigator.pushReplacementNamed(context, '/choice');
+  });
+  return const Scaffold(
+    body: Center(child: CircularProgressIndicator()),
+  );
+}
 
         // User is logged in - check their role
         final uid = authSnapshot.data!.uid;
